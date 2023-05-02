@@ -10,10 +10,13 @@ NTD Coding Challenge backend
 # Steps to run
 
 - Create a environment
-- `python -m virtualenv env`
+  - `python -m virtualenv env`
+- Once the environment is created installed all the modules necesary
+  - `pip install -r requirements.txt`
 - Then activate the script
   - For Windows
     - `env/Scripts/Activate`
   - For Linux/Mac
     - `env/bin/activate`
-- Run the server with `python manage.py runserver`
+- Run the server with
+  - `python manage.py runserver`
