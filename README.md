@@ -17,6 +17,6 @@ NTD Coding Challenge backend
   - For Windows
     - `env/Scripts/Activate`
   - For Linux/Mac
-    - `env/bin/activate`
+    - `source env/bin/activate`
 - Run the server with
   - `python manage.py runserver`
