@@ -4,9 +4,9 @@ from django.urls import include, path
 
 urlpatterns = [
     # Own
-    path('users/', include('users.urls')),
-    path('operations/', include('operations.urls')),
-    path('records/', include('records.urls')),
+    path('v1/users/', include('users.urls')),
+    path('v1/operations/', include('operations.urls')),
+    path('v1/records/', include('records.urls')),
     # Admin
     path('admin/', admin.site.urls),
     # DJR

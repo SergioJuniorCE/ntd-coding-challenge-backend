@@ -135,8 +135,16 @@ class Calculate(APIView):
         # Replace sqrt with math.sqrt
         equation = equation.replace("sqrt", "math.sqrt")
 
-        result = eval(equation)
+        try:
+            result = eval(equation)
+        except:
+            result = "Invalid equation"
         
+        if result == "Invalid equation":
+            operation_response = "Failed"
+        else:
+            operation_response = "Success"
+    
     
         user.balance -= cost
         user.save()
@@ -146,7 +154,7 @@ class Calculate(APIView):
             user=user,
             amount=cost,
             user_balance=user.balance,
-            operation_response="Success"
+            operation_response=operation_response
         )
 
         print(f'result: {result} user.balance: {user.balance}')
