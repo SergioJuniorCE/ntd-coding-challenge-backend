@@ -30,9 +30,10 @@ SECRET_KEY = 'django-insecure-_ac1vzpq1b6z=48@j5i7v0=)8azx#@nt&_m+u@)d*m-h28rss5
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-                 'http://localhost:5173', 'https://310b-158-101-24-137.ngrok-free.app']
+                 'http://localhost:5173', '310b-158-101-24-137.ngrok-free.app']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'https://310b-158-101-24-137.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173',
+                        'https://310b-158-101-24-137.ngrok-free.app']
 
 # CORS Settings
 CORS_ORIGIN_ALLOW_ALL = True
