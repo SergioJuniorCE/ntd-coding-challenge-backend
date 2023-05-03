@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -33,11 +34,14 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'http://localhost:5173',
+    'localhost:4173'
     'ntd-coding-challenge-backend.herokuapp.com',
-    'ntd-coding-challenge-frontend.vercel.app']
+    'ntd-coding-challenge-frontend.vercel.app',
+]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
+    'http://localhost:4173',
     'https://ntd-coding-challenge-backend.herokuapp.com',
     'https://ntd-coding-challenge-frontend.vercel.app'
 ]
@@ -50,6 +54,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1',
     'http://0.0.0.0',
     'http://localhost:5173',
+    'http://localhost:4173',
     'https://ntd-coding-challenge-backend.herokuapp.com',
     'https://ntd-coding-challenge-frontend.vercel.app'
 ]
@@ -70,6 +75,7 @@ INSTALLED_APPS = [
     'users',
     # Third party
     'rest_framework',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
 ]
@@ -95,11 +101,16 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
 }
 
 ROOT_URLCONF = 'backend.urls'

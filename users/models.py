@@ -12,6 +12,7 @@ class UserManager(BaseUserManager):
         if not password:
             raise ValueError('Users must have a password')
         username = self.normalize_email(username)
+        username = username.lower()
         user = self.model(username=username)
         user.set_password(password)
         user.save()
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have a password')
         user = self.create_user(username, password)
         user.is_superuser = True
+        user.is_staff = True
         user.save()
         return user
 
