@@ -33,11 +33,14 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'http://localhost:5173',
-    'ntd-coding-challenge-backend.herokuapp.com']
+    'ntd-coding-challenge-backend.herokuapp.com',
+    'ntd-coding-challenge-frontend.vercel.app']
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
-    'https://ntd-coding-challenge-backend.herokuapp.com']
+    'https://ntd-coding-challenge-backend.herokuapp.com',
+    'https://ntd-coding-challenge-frontend.vercel.app'
+]
 
 # CORS Settings
 CORS_ORIGIN_ALLOW_ALL = True
@@ -47,7 +50,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1',
     'http://0.0.0.0',
     'http://localhost:5173',
-    'https://ntd-coding-challenge-backend.herokuapp.com'
+    'https://ntd-coding-challenge-backend.herokuapp.com',
+    'https://ntd-coding-challenge-frontend.vercel.app'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
