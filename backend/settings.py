@@ -29,11 +29,15 @@ SECRET_KEY = 'django-insecure-_ac1vzpq1b6z=48@j5i7v0=)8azx#@nt&_m+u@)d*m-h28rss5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-                 'http://localhost:5173', '310b-158-101-24-137.ngrok-free.app']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'http://localhost:5173',
+    'ntd-coding-challenge-backend.herokuapp.com']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173',
-                        'https://310b-158-101-24-137.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'https://ntd-coding-challenge-backend.herokuapp.com']
 
 # CORS Settings
 CORS_ORIGIN_ALLOW_ALL = True
@@ -43,7 +47,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1',
     'http://0.0.0.0',
     'http://localhost:5173',
-    'https://310b-158-101-24-137.ngrok-free.app'
+    'https://ntd-coding-challenge-backend.herokuapp.com'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
