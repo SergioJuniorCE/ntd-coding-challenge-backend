@@ -14,33 +14,45 @@ class UserRegister(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        data = request.data
-        cleaned_data = user_validation(data)
-        serializer = UserRegisterSerializer(data=cleaned_data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.create(cleaned_data)
-            if user:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        try:
+            data = request.data
+            cleaned_data = user_validation(data)
+            serializer = UserRegisterSerializer(data=cleaned_data)
+            if serializer.is_valid(raise_exception=True):
+                user = serializer.create(cleaned_data)
+                if user:
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response({
+                "error": f"Something went wrong: {e}"    
+            },status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UserLogin(APIView):
-    # permission_classes = [permissions.AllowAny]
-    # authentication_classes = [SessionAuthentication]
+    permission_classes = [permissions.AllowAny]
+    authentication_classes = [SessionAuthentication]
 
     def post(self, request):
-        data = request.data
-        assert validate_username(data)
-        assert validate_password(data)
-        serializer = UserLoginSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.check_user(data)
-            if user:
-                login(request, user)
-                return Response({
-                    "user": serializer.data
-                }, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        try:
+            data = request.data
+            assert validate_username(data)
+            assert validate_password(data)
+            serializer = UserLoginSerializer(data=data)
+            if serializer.is_valid(raise_exception=True):
+                user = serializer.check_user(data)
+                if user:
+                    login(request, user)
+                    return Response({
+                        "user": serializer.data
+                    }, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response({
+                "error": f"Something went wrong: {e}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UserLogout(APIView):
@@ -51,7 +63,6 @@ class UserLogout(APIView):
 
 class UserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
 
     def get(self, request):
         serializer = UserSerializer(request.user)
@@ -59,7 +70,7 @@ class UserView(APIView):
 
 
 class UserListView(APIView):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
     authentication_classes = [SessionAuthentication]
 
     def get(self, request):
@@ -69,7 +80,7 @@ class UserListView(APIView):
 
 
 class ResetBalanceView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [SessionAuthentication]
 
     def post(self, request):
@@ -82,7 +93,7 @@ class ResetBalanceView(APIView):
 
 
 class GetBalanceView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [SessionAuthentication]
 
     def get(self, request):

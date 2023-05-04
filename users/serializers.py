@@ -4,15 +4,15 @@ from django.core import exceptions
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model, authenticate
 
-UserModel = get_user_model()
+User = get_user_model()
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserModel
+        model = User
         fields = '__all__'
         
     def validate(self, data):
-        user = UserModel(**data)
+        user = User(**data)
         password = data.get('password')
 
         try:
@@ -24,13 +24,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             )
 
         return data
-    
+        
     def create(self, clean_data):
-        user = UserModel.objects.create_user(
+        user = User.objects.create_user(
             username=clean_data['username'],
             password=clean_data['password']
         )
-        user.save()
+
         return user
 
 class UserLoginSerializer(serializers.Serializer):
@@ -47,5 +47,5 @@ class UserLoginSerializer(serializers.Serializer):
     
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserModel
+        model = User
         fields = ['username', 'balance']
