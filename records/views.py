@@ -14,7 +14,7 @@ from records.models import Record
 class GetRecordsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [JWTAuthentication]
-    
+
     pagination_class = PageNumberPagination
     pagination_class.page_size = 10
     pagination_class.max_page_size = 100
@@ -27,5 +27,18 @@ class GetRecordsView(APIView):
         serializer = RecordSerializer(paginated_queryset, many=True)
         return Response({
             "count": records.count(),
-            "results": serializer.data,    
+            "results": serializer.data,
+        }, status=status.HTTP_200_OK)
+
+
+class DeleteRecordView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, request):
+        record_id = request.data.get('record_id')
+        Record.objects.filter(
+            id=record_id, user=request.user).update(is_deleted=True)
+        return Response({
+            "message": "Record has been deleted"
         }, status=status.HTTP_200_OK)
