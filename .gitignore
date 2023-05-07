@@ -33,6 +33,9 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+# ignore env files
+*.env
+
 .Python
 env/
 build/
