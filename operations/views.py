@@ -8,11 +8,12 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, filters
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import permissions, status
+
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from operations.serializers import OperationSerializer
 from operations.models import Operation
@@ -23,7 +24,7 @@ from users.models import User
 
 
 class OperationViewSet(viewsets.ModelViewSet):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Operation.objects.all()
     serializer_class = OperationSerializer
@@ -63,7 +64,7 @@ def random_generate(request):
 
 class Calculate(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
+    # authentication_classes = [SessionAuthentication]
 
     def post(self, request):
         operator_pattern = r'[+\-*/]|sqrt\('
@@ -92,6 +93,7 @@ class Calculate(APIView):
 
         try:
             username = request.user
+            print(username)
             user = get_object_or_404(User, username=username)
         except:
             return Response(
@@ -101,9 +103,8 @@ class Calculate(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-
         equation = request.data.get('equation')
-        
+
         equation = urllib.parse.unquote(equation)
 
         if equation is None:
@@ -131,7 +132,7 @@ class Calculate(APIView):
             op_type=op_type,
             cost=cost,
         )
-        
+
         # Replace sqrt with math.sqrt
         equation = equation.replace("sqrt", "math.sqrt")
 
@@ -139,23 +140,28 @@ class Calculate(APIView):
             result = eval(equation)
         except:
             result = "Invalid equation"
-        
+
         if result == "Invalid equation":
             operation_response = "Failed"
         else:
             operation_response = "Success"
-    
-    
-        user.balance -= cost
-        user.save()
+
+        new_user_balance = user.balance - cost
 
         Record.objects.create(
             operation=operation,
             user=user,
             amount=cost,
-            user_balance=user.balance,
+            user_balance=new_user_balance,
             operation_response=operation_response
         )
+        if (operation_response == "Success"):
+            if (new_user_balance < 0):
+                return Response({
+                    "message": "Insufficient balance"
+                }, status=status.HTTP_402_PAYMENT_REQUIRED)
+            user.balance -= cost
+            user.save()
 
         print(f'result: {result} user.balance: {user.balance}')
 
@@ -167,9 +173,16 @@ class Calculate(APIView):
 
 class GetRandomString(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
+
     def get(self, request):
         url = 'https://www.random.org/strings/?num=1&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new'
         response = requests.get(url)
         random_string = response.text[:-2]
-        return Response(random_string)
+        user = get_object_or_404(User, username=request.user)
+        user.balance -= 10
+        user.save()
+        return Response({
+            "random_string": random_string,
+            "balance": user.balance,
+        })

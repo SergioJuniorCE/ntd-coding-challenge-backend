@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model, login, logout
 
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
+
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
 from .validations import user_validation, validate_password, validate_username
@@ -32,7 +33,6 @@ class UserRegister(APIView):
 
 class UserLogin(APIView):
     permission_classes = [permissions.AllowAny]
-    authentication_classes = [SessionAuthentication]
 
     def post(self, request):
         try:
@@ -56,6 +56,8 @@ class UserLogin(APIView):
 
 
 class UserLogout(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     def post(self, request):
         logout(request)
         return Response(status=status.HTTP_200_OK)
@@ -63,6 +65,7 @@ class UserLogout(APIView):
 
 class UserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get(self, request):
         serializer = UserSerializer(request.user)
@@ -70,8 +73,8 @@ class UserView(APIView):
 
 
 class UserListView(APIView):
-    # permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
-    authentication_classes = [SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    authentication_classes = [JWTAuthentication]
 
     def get(self, request):
         users = get_user_model().objects.all()
@@ -80,8 +83,8 @@ class UserListView(APIView):
 
 
 class ResetBalanceView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def post(self, request):
         user = request.user
@@ -93,8 +96,8 @@ class ResetBalanceView(APIView):
 
 
 class GetBalanceView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get(self, request):
         user = request.user

@@ -2,8 +2,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions, status
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.pagination import PageNumberPagination
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from records.serializers import RecordSerializer
 from records.models import Record
@@ -13,7 +13,7 @@ from records.models import Record
 
 class GetRecordsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
     
     pagination_class = PageNumberPagination
     pagination_class.page_size = 10
