@@ -34,7 +34,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'localhost:5173',
-    'localhost:4173'
+    'localhost:4173',
     'ntd-coding-challenge-backend.herokuapp.com',
     '.vercel.app',
 ]
